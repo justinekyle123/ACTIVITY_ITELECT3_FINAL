@@ -506,13 +506,12 @@ $studentsResult = $conn->query($studentsQuery);
                     <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" stroke="white" stroke-width="2"/>
                     <path d="M12 14C6.47715 14 2 18.4772 2 24H22C22 18.4772 17.5228 14 12 14Z" stroke="white" stroke-width="2"/>
                 </svg>
-                <h1>Student Management System</h1>
+                <h1>Student Management</h1>
             </div>
             <ul class="nav-links">
                 <li><a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
                 <li><a href="add.php"><i class="fas fa-user-graduate"></i>Add Students</a></li>
                 <li><a href="#"><i class="fas fa-chart-bar"></i> Reports</a></li>
-                <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
                 <li><a href="#"><i class="fas fa-user"></i> Profile</a></li>
             </ul>
         </nav>
@@ -593,7 +592,7 @@ $studentsResult = $conn->query($studentsQuery);
                                 <td><?php echo $student['Civil_status']; ?></td>
                                 <td>
                                     <div class="action-buttons">
-                                        <a href="#" class="action-btn btn-info view-btn" data-id="">
+                                        <a href="#" class="action-btn btn-info view-btn">
                                             <i class="fas fa-eye"></i> View
                                         </a>
                                         <a href="#" class="action-btn btn">
@@ -693,28 +692,28 @@ $studentsResult = $conn->query($studentsQuery);
             }
         });
 
-        // Modal functionality
-        const modal = document.getElementById('viewModal');
-        const closeBtn = document.querySelector('.close');
-        const viewButtons = document.querySelectorAll('.view-btn');
+        // // Modal functionality
+        // const modal = document.getElementById('viewModal');
+        // const closeBtn = document.querySelector('.close');
+        // const viewButtons = document.querySelectorAll('.view-btn');
 
-        viewButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const studentId = this.getAttribute('data-id');
-                loadStudentDetails(studentId);
-                modal.style.display = 'block';
-            });
-        });
+        // viewButtons.forEach(button => {
+        //     button.addEventListener('click', function() {
+        //         const studentId = this.getAttribute('data-id');
+        //         loadStudentDetails(studentId);
+        //         modal.style.display = 'block';
+        //     });
+        // });
 
-        closeBtn.addEventListener('click', function() {
-            modal.style.display = 'none';
-        });
+        // closeBtn.addEventListener('click', function() {
+        //     modal.style.display = 'none';
+        // });
 
-        window.addEventListener('click', function(event) {
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-        });
+        // window.addEventListener('click', function(event) {
+        //     if (event.target === modal) {
+        //         modal.style.display = 'none';
+        //     }
+        // });
 
         // Function to load student details via AJAX
         function loadStudentDetails(studentId) {
