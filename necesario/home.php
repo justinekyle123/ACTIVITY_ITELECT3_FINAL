@@ -1,7 +1,7 @@
 <?php
 include_once "config.php";
 
-// Handle form submission for adding students
+//  submission for adding students
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_student'])) {
     $name = $_POST['name'];
     $gender = $_POST['gender'];
@@ -54,8 +54,7 @@ if (isset($_GET['delete_id'])) {
     }
     $delete_stmt->close();
     
-    // Redirect to avoid resubmission
-    header("Location: index.php");
+    header("Location: home.php");
     exit();
 }
 
@@ -594,7 +593,7 @@ $studentsResult = $conn->query($studentsQuery);
                                 <td><?php echo $student['Civil_status']; ?></td>
                                 <td>
                                     <div class="action-buttons">
-                                        <a href="#" class="action-btn btn-info view-btn" data-id="<?php echo $student['student_id']; ?>">
+                                        <a href="#" class="action-btn btn-info view-btn" data-id="">
                                             <i class="fas fa-eye"></i> View
                                         </a>
                                         <a href="#" class="action-btn btn">
@@ -616,6 +615,8 @@ $studentsResult = $conn->query($studentsQuery);
             </table>
         </div>
     </div>
+
+
 
     <!-- View Student Modal -->
     <div id="viewModal" class="modal">
