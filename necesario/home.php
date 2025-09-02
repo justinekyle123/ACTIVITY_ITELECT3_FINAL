@@ -512,7 +512,7 @@ $studentsResult = $conn->query($studentsQuery);
                 <li><a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
                 <li><a href="add.php"><i class="fas fa-user-graduate"></i>Add Students</a></li>
                 <li><a href="#"><i class="fas fa-chart-bar"></i> Reports</a></li>
-                <li><a href="#"><i class="fas fa-user"></i> Profile</a></li>
+                <li><a href="index.php"><i class="fa-solid fa-right-from-bracket"></i></i> Logout</a></li>
             </ul>
         </nav>
     </header>

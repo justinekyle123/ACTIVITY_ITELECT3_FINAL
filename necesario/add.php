@@ -286,7 +286,7 @@ $conn->close();
                 <li><a href="home.php"><i class="fas fa-home"></i> Dashboard</a></li>
                 <li><a href="add_student.php" class="active"><i class="fas fa-user-plus"></i> Add Student</a></li>
                 <li><a href="#"><i class="fas fa-chart-bar"></i> Reports</a></li>
-                <li><a href="#"><i class="fas fa-user"></i> Profile</a></li>
+                <li><a href="index.php"><i class="fa-solid fa-right-from-bracket"></i></i> Logout</a></li>
             </ul>
         </nav>
     </header>
@@ -369,7 +369,7 @@ $conn->close();
                 </div>
                 <div class="form-actions">
                     <a href="home.php" class="btn btn-back"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
-                    <button type="submit" name="add_student" class="btn btn-success"><i class="fas fa-save"></i> Add Student</button>
+                    <button type="submit" name="add_student" class="btn btn-success" ><i class="fas fa-save"></i> Add Student</button>
                 </div>
             </form>
         </div>
