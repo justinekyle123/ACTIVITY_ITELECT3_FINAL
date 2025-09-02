@@ -167,7 +167,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #f0f9ff, #cbebff);
+    background: linear-gradient(135deg, #0c8aff79, #000811ff);
     min-height: 100vh;
     overflow-x: hidden;
 }
@@ -420,7 +420,7 @@ body {
         }
 /* Animations */
 @keyframes fadeInUp {
-    from {
+    from {  
         opacity: 0;
         transform: translateY(30px);
     }
