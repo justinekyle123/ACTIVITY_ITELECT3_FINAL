@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 30, 2025 at 06:52 AM
+-- Generation Time: Sep 02, 2025 at 09:28 AM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `login_necesario`
+-- Database: `login`
 --
 
 -- --------------------------------------------------------
@@ -45,6 +45,13 @@ CREATE TABLE `students` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `students`
+--
+
+INSERT INTO `students` (`student_id`, `Photo`, `Name`, `Date`, `Gender`, `Address`, `Place_of_Birth`, `Contact_no`, `Date_of_birth`, `Email`, `Age`, `Religion`, `Citizenship`, `Civil_status`) VALUES
+(1, 'uploads/1756798103_kyle.jpg', 'Justine Kyle', '2025-09-02', 'Male', 'Polomolok South Cotabato', 'Gneral Santos', 2147483647, '2006-06-01', 'kyle@gmail.com', 18, 'Assembly of God', 'Filipino', 'Single');
+
+--
 -- Indexes for dumped tables
 --
 
@@ -62,7 +69,7 @@ ALTER TABLE `students`
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `student_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `student_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
