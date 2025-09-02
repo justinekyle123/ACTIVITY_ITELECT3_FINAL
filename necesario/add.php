@@ -33,11 +33,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_student'])) {
     $stmt->bind_param("ssssssssisss", $photo, $name, $gender, $address, $place_of_birth, $contact_no, $date_of_birth, $email, $age, $religion, $citizenship, $civil_status);
     
     if ($stmt->execute()) {
-        header("Location: home.php?success=Student added successfully!");
-        exit();
-    } else {
-        header("Location: home.php?error=Error adding student: " . $stmt->error);
-        exit();
+       echo "<script>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Student Added!',
+                    text: 'The student has been successfully added.',
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(function() {
+                    window.location.href = 'home.php'; 
+                });
+              </script>";
+    }else{
+         echo "<script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'There was an error adding the student.',
+                    showConfirmButton: true
+                });
+              </script>";
     }
     $stmt->close();
 }
@@ -334,7 +349,7 @@ $conn->close();
                     </div>
                     <div class="form-group">
                         <label for="age">Age *</label>
-                        <input type="number" id="age" name="age" required>
+                        <input type="number" id="age" name="age" readonly required>
                     </div>
                     <div class="form-group">
                         <label for="civil_status">Civil Status *</label>
@@ -374,5 +389,22 @@ $conn->close();
             </form>
         </div>
     </div>
+
+     <script>
+        document.getElementById('date_of_birth').addEventListener('change', function() {
+            const dob = new Date(this.value);
+            const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            const monthDiff = today.getMonth() - dob.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
+            
+            document.getElementById('age').value = age;
+
+        });
+
+    </script>
 </body>
 </html>

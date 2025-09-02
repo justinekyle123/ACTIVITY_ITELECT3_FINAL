@@ -58,6 +58,7 @@ if (isset($_GET['delete_id'])) {
     exit();
 }
 
+
 // Get total students
 $totalQuery = "SELECT COUNT(*) as total FROM students";
 $totalResult = $conn->query($totalQuery);
@@ -95,7 +96,9 @@ $studentsResult = $conn->query($studentsQuery);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Management System</title>
+    <title>Student Management System</title> 
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -598,7 +601,7 @@ $studentsResult = $conn->query($studentsQuery);
                                         <a href="#" class="action-btn btn">
                                             <i class="fas fa-edit"></i> Edit
                                         </a>
-                                        <a href="?delete_id=<?php echo $student['student_id']; ?>" class="action-btn btn-danger" onclick="return confirm('Are you sure you want to delete this student?')">
+                                        <a href="?delete_id=<?php echo $student['student_id']; ?>" class="action-btn btn-danger" onclick="return confirmDelete()">
                                             <i class="fas fa-trash"></i> Delete
                                         </a>
                                     </div>
@@ -616,17 +619,23 @@ $studentsResult = $conn->query($studentsQuery);
     </div>
 
 
-
-    <!-- View Student Modal -->
-    <div id="viewModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Student Details</h2>
-            <div id="studentDetails" class="student-details">
-               
-            </div>
-        </div>
-    </div>
+<script>
+    function confirmDelete() {
+        event.preventDefault();
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You will not be able to undo this action!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, keep it'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = 'delete.php'; 
+            }
+        });
+    }
+</script>
 
     <script>
         // Gender Pie Chart
@@ -692,28 +701,7 @@ $studentsResult = $conn->query($studentsQuery);
             }
         });
 
-        // // Modal functionality
-        // const modal = document.getElementById('viewModal');
-        // const closeBtn = document.querySelector('.close');
-        // const viewButtons = document.querySelectorAll('.view-btn');
-
-        // viewButtons.forEach(button => {
-        //     button.addEventListener('click', function() {
-        //         const studentId = this.getAttribute('data-id');
-        //         loadStudentDetails(studentId);
-        //         modal.style.display = 'block';
-        //     });
-        // });
-
-        // closeBtn.addEventListener('click', function() {
-        //     modal.style.display = 'none';
-        // });
-
-        // window.addEventListener('click', function(event) {
-        //     if (event.target === modal) {
-        //         modal.style.display = 'none';
-        //     }
-        // });
+       
 
         // Function to load student details via AJAX
         function loadStudentDetails(studentId) {
