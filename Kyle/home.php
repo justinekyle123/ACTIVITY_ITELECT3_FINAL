@@ -25,7 +25,7 @@
             
         }
         .btn-primary:hover{
-             transform: translateY(-5px);
+             transform: translateY(-2px);
         }
         
         body {
