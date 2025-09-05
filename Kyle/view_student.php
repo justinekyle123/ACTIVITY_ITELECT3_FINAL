@@ -1,150 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Management System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style>
-        :root {
-            --primary: #4e73df;
-            --secondary: #6c757d;
-            --success: #1cc88a;
-            --info: #36b9cc;
-            --warning: #f6c23e;
-            --danger: #e74a3b;
-            --light: #f8f9fc;
-            --dark: #5a5c69;
-        }
-        .btn-primary{
-            background: linear-gradient(90deg, var(--primary) 0%, #2a3e9d 100%);
-            transition: transform 0.3s;
-            
-        }
-        .btn-primary:hover{
-             transform: translateY(-2px);
-        }
-        
-        body {
-            background-color: #f8f9fc;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        .navbar {
-            background: linear-gradient(90deg, var(--primary) 0%, #2a3e9d 100%);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            width: 100vw;
-            top:0;
-            z-index: 999;
-        }
-        
-        .dashboard-card {
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
-            border: none;
-        }
-        
-        .dashboard-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .chart-container {
-            height: 300px;
-            margin-bottom: 30px;
-        }
-        
-        .navbar-brand {
-            font-weight: bold;
-            font-size: 1.5rem;
-        }
-        
-        .student-table {
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        
-        .student-table th {
-            background-color: var(--primary);
-            color: white;
-        }
-        
-        .action-buttons .btn {
-            margin-right: 5px;
-        }
-        
-        .card-header {
-            font-weight: 600;
-            background-color: white;
-            border-bottom: 1px solid #e3e6f0;
-        }
-        
-        .stat-card {
-            color: white;
-            border-radius: 10px;
-        }
-        
-        .stat-card i {
-            font-size: 2.5rem;
-            opacity: 0.8;
-        }
-        
-        .bg-gradient-primary {
-            background: linear-gradient(90deg, var(--primary) 0%, #2a3e9d 100%);
-        }
-        
-        .bg-gradient-success {
-            background: linear-gradient(90deg, var(--success) 0%, #0f9d58 100%);
-        }
-        
-        .bg-gradient-info {
-            background: linear-gradient(90deg, var(--info) 0%, #1c7cd6 100%);
-        }
-        
-        .bg-gradient-warning {
-            background: linear-gradient(90deg, var(--warning) 0%, #da9b00 100%);
-        }
-        
-        .page-title {
-            color: var(--dark);
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Details | Student Management System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary: #4e73df;
+      --secondary: #6c757d;
+      --success: #1cc88a;
+      --warning: #f6c23e;
+      --danger: #e74a3b;
+      --dark: #343a40;
+      --light: #f8f9fc;
+    }
+
+    body {
+      background-color: var(--light);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding-top: 70px;
+    }
+
+    .navbar {
+      background: linear-gradient(90deg, var(--primary) 0%, #2a3e9d 100%);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.4rem;
+    }
+
+    .card {
+      border: none;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+    }
+
+    .card-header {
+      background: var(--primary);
+      color: white;
+      padding: 1rem 1.5rem;
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+
+    .profile-pic {
+      border: 5px solid #fff;
+      box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+    }
+
+    .student-info p {
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    .student-info strong {
+      width: 140px;
+      display: inline-block;
+      color: var(--dark);
+    }
+
+    .btn {
+      border-radius: 8px;
+      padding: 8px 18px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn-warning {
+      background: linear-gradient(90deg, #f6c23e, #da9b00);
+      border: none;
+      color: #fff;
+    }
+
+    .btn-warning:hover {
+      opacity: 0.9;
+    }
+
+    .btn-secondary {
+      background: linear-gradient(90deg, #6c757d, #495057);
+      border: none;
+      color: #fff;
+    }
+
+    .btn-secondary:hover {
+      opacity: 0.9;
+    }
+  </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="home.php">
-                <i class="fas fa-graduation-cap me-2"></i>Student Management System
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="home.php"><i class="fas fa-home me-1"></i> Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="add_student.php"><i class="fas fa-user-plus me-1"></i> Add Student</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.php"><i  class="fa-solid fa-right-from-bracket"></i> Logout</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="home.php">
+        <i class="fas fa-graduation-cap me-2"></i> Student Management
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="home.php"><i class="fas fa-home me-1"></i> Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="add_student.php"><i class="fas fa-user-plus me-1"></i> Add Student</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="index.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-  
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <?php 
+  include 'config.php';
+
+  if (!isset($_GET['id'])) {
+      die("Student ID is required.");
+  }
+
+  $id = (int) $_GET['id'];
+  $sql = "SELECT * FROM students WHERE student_id = $id";
+  $result = $conn->query($sql);
+
+  if ($result->num_rows == 0) {
+      die("Student not found.");
+  }
+
+  $student = $result->fetch_assoc();
+  ?>
+
+  <!-- Student Details -->
+  <div class="container mt-5">
+    <div class="card">
+      <div class="card-header">
+        <i class="fas fa-user-graduate me-2"></i> Student Details
+      </div>
+      <div class="card-body text-center">
+        <img src="<?= $student['Photo'] ?>" width="140" height="140" class="rounded-circle profile-pic mb-3">
+        <div class="student-info text-start mx-auto" style="max-width:500px;">
+          <p><strong>ID:</strong> <?= $student['student_id'] ?></p>
+          <p><strong>Name:</strong> <?= $student['Name'] ?></p>
+          <p><strong>Gender:</strong> <?= $student['Gender'] ?></p>
+          <p><strong>Age:</strong> <?= $student['Age'] ?></p>
+          <p><strong>Contact:</strong> <?= $student['Contact_no'] ?></p>
+          <p><strong>Civil Status:</strong> <?= $student['Civil_status'] ?></p>
+        </div>
+      </div>
+      <div class="card-footer text-end bg-light">
+        <a href="home.php" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
+        <a href="edit_student.php?id=<?= $student['student_id'] ?>" class="btn btn-warning"><i class="fas fa-edit"></i> Edit</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
