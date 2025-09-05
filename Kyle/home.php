@@ -305,52 +305,92 @@
                     <i class="fas fa-user-plus me-1"></i> Add New Student
                 </a>
             </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover student-table" id="dataTable">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Photo</th>
-                                <th>Name</th>
-                                <th>Gender</th>
-                                <th>Age</th>
-                                <th>Contact</th>
-                                <th>Civil Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $sql = "SELECT * FROM students";
-                            $result = $conn->query($sql);
-                            
-                            if ($result->num_rows > 0) {
-                                while($row = $result->fetch_assoc()) {
-                                    echo "<tr>
-                                        <td>{$row['student_id']}</td>
-                                        <td class='text-center'><img src='{$row['Photo']}' width='40' height='40' class='rounded-circle'></td>
-                                        <td>{$row['Name']}</td>
-                                        <td>{$row['Gender']}</td>
-                                        <td>{$row['Age']}</td>
-                                        <td>{$row['Contact_no']}</td>
-                                        <td>{$row['Civil_status']}</td>
-                                        <td class='action-buttons'>
-                                            <a href='view_student.php?id={$row['student_id']}' class='btn btn-info btn-sm' title='View'><i class='fas fa-eye'></i></a>
-                                            <a href='edit_student.php?id={$row['student_id']}' class='btn btn-warning btn-sm' title='Edit'><i class='fas fa-edit'></i></a>
-                                            <a href='home.php?delete_id={$row['student_id']}' class='btn btn-danger btn-sm' title='Delete'><i class='fas fa-trash'></i></a>
-                                        </td>
-                                    </tr>";
-                                }
-                            } else {
-                                echo "<tr><td colspan='8' class='text-center'>No students found</td></tr>";
-                            }
-                            $conn->close();
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+           <div class="card-body">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover student-table" id="dataTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Photo</th>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Age</th>
+                    <th>Contact</th>
+                    <th>Civil Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $limit = 5;
+
+                $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                if ($page < 1) $page = 1;
+                $offset = ($page - 1) * $limit;
+
+                // Count total records
+                $countRes = $conn->query("SELECT COUNT(*) AS total FROM students");
+                $countRow = $countRes->fetch_assoc();
+                $total_students = $countRow['total'];
+
+                // Calculate total pages
+                $total_pages = ceil($total_students / $limit);
+
+                // Fetch students with LIMIT
+                $sql = "SELECT * FROM students LIMIT $offset, $limit";
+                $result = $conn->query($sql);
+
+                if ($result->num_rows > 0) {
+                    while($row = $result->fetch_assoc()) {
+                        echo "<tr>
+                            <td>{$row['student_id']}</td>
+                            <td class='text-center'><img src='{$row['Photo']}' width='40' height='40' class='rounded-circle'></td>
+                            <td>{$row['Name']}</td>
+                            <td>{$row['Gender']}</td>
+                            <td>{$row['Age']}</td>
+                            <td>{$row['Contact_no']}</td>
+                            <td>{$row['Civil_status']}</td>
+                            <td class='action-buttons'>
+                                <a href='view_student.php?id={$row['student_id']}' class='btn btn-info btn-sm' title='View'><i class='fas fa-eye'></i></a>
+                                <a href='edit_student.php?id={$row['student_id']}' class='btn btn-warning btn-sm' title='Edit'><i class='fas fa-edit'></i></a>
+                                <a href='home.php?delete_id={$row['student_id']}' class='btn btn-danger btn-sm' title='Delete'><i class='fas fa-trash'></i></a>
+                            </td>
+                        </tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='8' class='text-center'>No students found</td></tr>";
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <nav>
+        <ul class="pagination justify-content-center">
+            <?php if ($page > 1): ?>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<?= $page - 1 ?>">Previous</a>
+                </li>
+            <?php endif; ?>
+
+            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
+                    <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
+                </li>
+            <?php endfor; ?>
+
+            <?php if ($page < $total_pages): ?>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<?= $page + 1 ?>">Next</a>
+                </li>
+            <?php endif; ?>
+        </ul>
+    </nav>
+</div>
+
+<?php $conn->close(); ?>
+
         </div>
     </div>
 
