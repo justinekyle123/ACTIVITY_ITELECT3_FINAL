@@ -36,6 +36,10 @@
         .navbar {
             background: linear-gradient(90deg, var(--primary) 0%, #2a3e9d 100%);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100vw;
+            top:0;
+            z-index: 999;
         }
         
         .dashboard-card {
