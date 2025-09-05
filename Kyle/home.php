@@ -19,6 +19,14 @@
             --light: #f8f9fc;
             --dark: #5a5c69;
         }
+        .btn-primary{
+            background: linear-gradient(90deg, var(--primary) 0%, #2a3e9d 100%);
+            transition: transform 0.3s;
+            
+        }
+        .btn-primary:hover{
+             transform: translateY(-5px);
+        }
         
         body {
             background-color: #f8f9fc;
