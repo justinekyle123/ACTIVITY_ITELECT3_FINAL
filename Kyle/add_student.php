@@ -207,6 +207,13 @@ $conn->close();
             color: var(--danger);
             margin-left: 4px;
         }
+         .footer {
+            background: var(--dark);
+            color: white;
+            padding: 20px 0;
+            margin-top: 40px;
+            border-radius: 20px 20px 0 0;
+        }
         
         .form-section {
             margin-bottom: 2.5rem;
@@ -393,9 +400,10 @@ $conn->close();
         </div>
     </div>
 
-    <footer class="bg-white mt-5 py-4 text-center">
+     <footer class="footer text-center">
         <div class="container">
-            <p class="text-muted mb-0">© 2023 Student Management System. All rights reserved.</p>
+            <p class="mb-0">© 2025 South East Asian Institute of Technology.</p>
+            <p class="mb-0">Designed for excellence in education</p>
         </div>
     </footer>
 

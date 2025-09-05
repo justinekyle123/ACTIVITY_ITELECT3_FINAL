@@ -115,6 +115,13 @@
             font-weight: 700;
             margin-bottom: 1.5rem;
         }
+         .footer {
+            background: var(--dark);
+            color: white;
+            padding: 20px 0;
+            margin-top: 40px;
+            border-radius: 20px 20px 0 0;
+        }
     </style>
 </head>
 <body>
@@ -394,9 +401,10 @@
         </div>
     </div>
 
-    <footer class="bg-white mt-5 py-3 text-center">
+    <footer class="footer text-center">
         <div class="container">
-            <p class="text-muted mb-0">© 2023 Student Management System. All rights reserved.</p>
+            <p class="mb-0">© 2025 South East Asian Institute of Technology.</p>
+            <p class="mb-0">Designed for excellence in education</p>
         </div>
     </footer>
 

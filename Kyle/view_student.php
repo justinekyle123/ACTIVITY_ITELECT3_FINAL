@@ -355,7 +355,7 @@ $student = $result->fetch_assoc();
 
     <footer class="footer text-center">
         <div class="container">
-            <p class="mb-0">© 2023 Prestige Academy Student Management System. All rights reserved.</p>
+            <p class="mb-0">© 2025 South East Asian Institute of Technology.</p>
             <p class="mb-0">Designed for excellence in education</p>
         </div>
     </footer>
