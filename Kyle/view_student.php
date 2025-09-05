@@ -40,30 +40,18 @@ $student = $result->fetch_assoc();
             color: #2e3a59;
         }
         
-        .school-header {
-            background: linear-gradient(120deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 20px 0;
-            border-radius: 0 0 20px 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
+        .navbar {
+            background: linear-gradient(90deg, var(--primary) 0%, #2a3e9d 100%);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100vw;
+            top:0;
+            z-index: 999;
+            
         }
-        
-        .school-logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .logo-icon {
-            font-size: 2.2rem;
-            color: white;
-        }
-        
-        .school-name {
-            font-weight: 700;
-            font-size: 1.8rem;
-            margin: 0;
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
         }
         
         .school-tagline {
@@ -83,6 +71,9 @@ $student = $result->fetch_assoc();
         
         .profile-card:hover {
             transform: translateY(-5px);
+        }
+        .card{
+            margin-top:7%;
         }
         
         .card-header {
@@ -236,18 +227,30 @@ $student = $result->fetch_assoc();
     </style>
 </head>
 <body>
-    <!-- School Header -->
-    <header class="school-header">
+  <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
         <div class="container">
-            <div class="school-logo">
-                <i class="fas fa-graduation-cap logo-icon"></i>
-                <div>
-                    <h1 class="school-name">Prestige Academy</h1>
-                    <p class="school-tagline">Excellence in Education Since 1995</p>
-                </div>
+            <a class="navbar-brand" href="home.php">
+                <i class="fas fa-graduation-cap me-2"></i>Student Management System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="home.php"><i class="fas fa-home me-1"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="add_student.php"><i class="fas fa-user-plus me-1"></i> Add Student</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php"><i  class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                    </li>
+                </ul>
             </div>
         </div>
-    </header>
+    </nav>
 
     <div class="container mb-5">
         <!-- Student Profile Card -->
@@ -320,7 +323,7 @@ $student = $result->fetch_assoc();
                     </div>
                     
                     <!-- Additional Information -->
-                    <div class="col-lg-6 mb-4">
+                    <div class="col-lg-12 mb-4">
                         <div class="detail-box">
                             <h5 class="section-title"><i class="fas fa-info-circle accent-icon"></i> Additional Information</h5>
                             
@@ -340,28 +343,7 @@ $student = $result->fetch_assoc();
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Academic Information -->
-                    <div class="col-lg-6 mb-4">
-                        <div class="detail-box">
-                            <h5 class="section-title"><i class="fas fa-graduation-cap accent-icon"></i> Academic Information</h5>
-                            
-                            <div class="info-item">
-                                <span class="info-label"><i class="fas fa-book text-primary"></i> Current Grade:</span>
-                                <span class="info-value">Grade 10</span>
-                            </div>
-                            
-                            <div class="info-item">
-                                <span class="info-label"><i class="fas fa-star text-primary"></i> GPA:</span>
-                                <span class="info-value">3.8/4.0</span>
-                            </div>
-                            
-                            <div class="info-item">
-                                <span class="info-label"><i class="fas fa-trophy text-primary"></i> Achievements:</span>
-                                <span class="info-value">Science Fair Winner, Math Olympiad Finalist</span>
-                            </div>
-                        </div>
-                    </div>
+                   
                 </div>
             </div>
             <div class="card-footer py-3 px-4 d-flex justify-content-between">
