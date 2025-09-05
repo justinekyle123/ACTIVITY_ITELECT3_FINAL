@@ -1,48 +1,48 @@
 <?php
+// Include database connection
 include 'config.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_student'])) {
-    $name = $_POST['name'];
-    $gender = $_POST['gender'];
-    $address = $_POST['address'];
-    $place_of_birth = $_POST['place_of_birth'];
-    $contact_no = $_POST['contact_no'];
-    $date_of_birth = $_POST['date_of_birth'];
-    $email = $_POST['email'];
-    $age = $_POST['age'];
-    $religion = $_POST['religion'];
-    $citizenship = $_POST['citizenship'];
-    $civil_status = $_POST['civil_status'];
-    
-    // Handle file upload
-    $photo = '';
-    if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = 'uploads/';
-        if (!is_dir($upload_dir)) {
-            mkdir($upload_dir, 0777, true);
-        }
-        $photo_name = time() . '_' . basename($_FILES['photo']['name']);
-        $photo_path = $upload_dir . $photo_name;
-        if (move_uploaded_file($_FILES['photo']['tmp_name'], $photo_path)) {
-            $photo = $photo_path;
-        }
-    }
-    
-    // Insert student
-    $stmt = $conn->prepare("INSERT INTO students (Photo, Name, Gender, Address, Place_of_Birth, Contact_no, Date_of_birth, Email, Age, Religion, Citizenship, Civil_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssssssisss", $photo, $name, $gender, $address, $place_of_birth, $contact_no, $date_of_birth, $email, $age, $religion, $citizenship, $civil_status);
-    
-    if ($stmt->execute()) {
-        header("Location: home.php?success=Student added successfully!");
-        exit();
-    } else {
-        header("Location: home.php?error=Error adding student: " . $stmt->error);
-        exit();
-    }
-    $stmt->close();
-}
+// Initialize variables
+$success_message = '';
+$error_message = '';
 
-$conn->close();
+// Process form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Sanitize and validate input data
+    $name = mysqli_real_escape_string($conn, trim($_POST['name']));
+    $gender = mysqli_real_escape_string($conn, $_POST['gender']);
+    $date_of_birth = mysqli_real_escape_string($conn, $_POST['date_of_birth']);
+    $age = (int)$_POST['age'];
+    $civil_status = mysqli_real_escape_string($conn, $_POST['civil_status']);
+    $religion = mysqli_real_escape_string($conn, trim($_POST['religion']));
+    $email = mysqli_real_escape_string($conn, trim($_POST['email']));
+    $contact_no = mysqli_real_escape_string($conn, trim($_POST['contact_no']));
+    $address = mysqli_real_escape_string($conn, trim($_POST['address']));
+    $place_of_birth = mysqli_real_escape_string($conn, trim($_POST['place_of_birth']));
+    $citizenship = mysqli_real_escape_string($conn, trim($_POST['citizenship']));
+    $photo = mysqli_real_escape_string($conn, $_POST['photo']);
+    
+    // Validate required fields
+    if (empty($name) || empty($gender) || empty($date_of_birth) || empty($civil_status) || 
+        empty($religion) || empty($email) || empty($contact_no) || empty($address) || 
+        empty($place_of_birth) || empty($citizenship)) {
+        $error_message = "All required fields must be filled!";
+    } else {
+
+            // Insert data into database
+            $sql = "INSERT INTO students (name, gender, date_of_birth, age, civil_status, religion, email, contact_no, address, place_of_birth, citizenship, photo) 
+                    VALUES ('$name', '$gender', '$date_of_birth', $age, '$civil_status', '$religion', '$email', '$contact_no', '$address', '$place_of_birth', '$citizenship', '$photo')";
+            
+            if (mysqli_query($conn, $sql)) {
+                $success_message = "Student added successfully!";
+                // Clear form data after successful submission
+                $_POST = array();
+            } else {
+                $error_message = "Error: " . mysqli_error($conn);
+            }
+        }
+    
+}
 ?>
 
 <!DOCTYPE html>
@@ -220,7 +220,7 @@ $conn->close();
                         <a class="nav-link active" href="add_student.php"><i class="fas fa-user-plus me-1"></i> Add Student</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php"><i  class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                        <a class="nav-link" href="index.php"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
                     </li>
                 </ul>
             </div>
@@ -243,7 +243,7 @@ $conn->close();
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="name" class="form-label required-field">Full Name</label>
-                                    <input type="text" class="form-control" id="name" name="name" required>
+                                    <input type="text" class="form-control" id="name" name="name" value="<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name']) : ''; ?>" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -251,8 +251,8 @@ $conn->close();
                                     <label for="gender" class="form-label required-field">Gender</label>
                                     <select class="form-select" id="gender" name="gender" required>
                                         <option value="">Select Gender</option>
-                                        <option value="Male">Male</option>
-                                        <option value="Female">Female</option>
+                                        <option value="Male" <?php echo (isset($_POST['gender']) && $_POST['gender'] == 'Male') ? 'selected' : ''; ?>>Male</option>
+                                        <option value="Female" <?php echo (isset($_POST['gender']) && $_POST['gender'] == 'Female') ? 'selected' : ''; ?>>Female</option>
                                     </select>
                                 </div>
                             </div>
@@ -262,13 +262,13 @@ $conn->close();
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="date_of_birth" class="form-label required-field">Date of Birth</label>
-                                    <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" required>
+                                    <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" value="<?php echo isset($_POST['date_of_birth']) ? $_POST['date_of_birth'] : ''; ?>" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="age" class="form-label required-field">Age</label>
-                                    <input type="number" class="form-control" id="age" name="age" required readonly>
+                                    <input type="number" class="form-control" id="age" name="age" value="<?php echo isset($_POST['age']) ? $_POST['age'] : ''; ?>" required readonly>
                                 </div>
                             </div>
                         </div>
@@ -279,17 +279,17 @@ $conn->close();
                                     <label for="civil_status" class="form-label required-field">Civil Status</label>
                                     <select class="form-select" id="civil_status" name="civil_status" required>
                                         <option value="">Select Civil Status</option>
-                                        <option value="Single">Single</option>
-                                        <option value="Married">Married</option>
-                                        <option value="Divorced">Divorced</option>
-                                        <option value="Widowed">Widowed</option>
+                                        <option value="Single" <?php echo (isset($_POST['civil_status']) && $_POST['civil_status'] == 'Single') ? 'selected' : ''; ?>>Single</option>
+                                        <option value="Married" <?php echo (isset($_POST['civil_status']) && $_POST['civil_status'] == 'Married') ? 'selected' : ''; ?>>Married</option>
+                                        <option value="Divorced" <?php echo (isset($_POST['civil_status']) && $_POST['civil_status'] == 'Divorced') ? 'selected' : ''; ?>>Divorced</option>
+                                        <option value="Widowed" <?php echo (isset($_POST['civil_status']) && $_POST['civil_status'] == 'Widowed') ? 'selected' : ''; ?>>Widowed</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="religion" class="form-label required-field">Religion</label>
-                                    <input type="text" class="form-control" id="religion" name="religion" required>
+                                    <input type="text" class="form-control" id="religion" name="religion" value="<?php echo isset($_POST['religion']) ? htmlspecialchars($_POST['religion']) : ''; ?>" required>
                                 </div>
                             </div>
                         </div>
@@ -302,13 +302,13 @@ $conn->close();
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="email" class="form-label required-field">Email Address</label>
-                                    <input type="email" class="form-control" id="email" name="email" required>
+                                    <input type="email" class="form-control" id="email" name="email" value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="contact_no" class="form-label required-field">Contact Number</label>
-                                    <input type="tel" class="form-control" id="contact_no" name="contact_no" required>
+                                    <input type="tel" class="form-control" id="contact_no" name="contact_no" value="<?php echo isset($_POST['contact_no']) ? htmlspecialchars($_POST['contact_no']) : ''; ?>" required>
                                 </div>
                             </div>
                         </div>
@@ -317,26 +317,26 @@ $conn->close();
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="address" class="form-label required-field">Address</label>
-                                    <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
+                                    <textarea class="form-control" id="address" name="address" rows="3" required><?php echo isset($_POST['address']) ? htmlspecialchars($_POST['address']) : ''; ?></textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-
+                    <!-- Additional Information Section -->
                     <div class="form-section">
                         <h4 class="section-title"><i class="fas fa-info-circle me-2"></i>Additional Information</h4>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="place_of_birth" class="form-label required-field">Place of Birth</label>
-                                    <input type="text" class="form-control" id="place_of_birth" name="place_of_birth" required>
+                                    <input type="text" class="form-control" id="place_of_birth" name="place_of_birth" value="<?php echo isset($_POST['place_of_birth']) ? htmlspecialchars($_POST['place_of_birth']) : ''; ?>" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="citizenship" class="form-label required-field">Citizenship</label>
-                                    <input type="text" class="form-control" id="citizenship" name="citizenship" required>
+                                    <input type="text" class="form-control" id="citizenship" name="citizenship" value="<?php echo isset($_POST['citizenship']) ? htmlspecialchars($_POST['citizenship']) : ''; ?>" required>
                                 </div>
                             </div>
                         </div>
@@ -362,10 +362,10 @@ $conn->close();
             </div>
             
             <div class="form-navigation">
-                <a href="index.php" class="btn btn-secondary">
+                <a href="home.php" class="btn btn-secondary">
                     <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
                 </a>
-                <button type="submit" form="addStudentForm" class="btn btn-primary">
+                <button type="button" id="submitBtn" class="btn btn-primary">
                     <i class="fas fa-save me-1"></i> Save Student
                 </button>
             </div>
@@ -380,6 +380,7 @@ $conn->close();
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Calculate age based on date of birth
         document.getElementById('date_of_birth').addEventListener('change', function() {
             const dob = new Date(this.value);
             const today = new Date();
@@ -415,31 +416,90 @@ $conn->close();
             }
         });
         
-        // Form submission with SweetAlert
-        document.getElementById('addStudentForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        // SweetAlert confirmation before form submission
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            // Validate required fields
+            const form = document.getElementById('addStudentForm');
+            const requiredFields = form.querySelectorAll('[required]');
+            let isValid = true;
+            let emptyFields = [];
             
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    isValid = false;
+                    emptyFields.push(field.previousElementSibling.textContent.replace('*', ''));
+                }
+            });
+            
+            if (!isValid) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Missing Required Fields',
+                    html: 'Please fill in the following required fields:<br><br>' + 
+                          '<ul style="text-align: left;">' + 
+                          emptyFields.map(field => '<li>' + field + '</li>').join('') + 
+                          '</ul>',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#4e73df'
+                });
+                return;
+            }
+            
+            // Show confirmation dialog
             Swal.fire({
-                title: 'Add Student?',
+                title: 'Confirm Student Registration',
                 text: 'Are you sure you want to add this student to the system?',
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#4e73df',
                 cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Yes, add student!'
+                confirmButtonText: 'Yes, Add Student',
+                cancelButtonText: 'Cancel'
             }).then((result) => {
                 if (result.isConfirmed) {
+                    // Show loading
                     Swal.fire({
-                        icon: 'success',
-                        title: 'Student Added!',
-                        text: 'Student has been successfully added to the system.',
-                        confirmButtonColor: '#4e73df'
-                    }).then(() => {
-                        this.submit();
+                        title: 'Processing...',
+                        text: 'Adding student to the system',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
                     });
+                    
+                    // Submit the form
+                    form.submit();
                 }
             });
         });
+        
+        // Show success/error messages
+        <?php if (!empty($success_message)): ?>
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: '<?php echo $success_message; ?>',
+            confirmButtonColor: '#1cc88a',
+            timer: 3000,
+            timerProgressBar: true
+        }).then(() => {
+            // Reset form after success
+            document.getElementById('addStudentForm').reset();
+            document.getElementById('previewImage').style.display = 'none';
+            document.querySelector('.upload-icon').style.display = 'block';
+        });
+        <?php endif; ?>
+        
+        <?php if (!empty($error_message)): ?>
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: '<?php echo $error_message; ?>',
+            confirmButtonColor: '#e74a3b'
+        });
+        <?php endif; ?>
     </script>
 </body>
 </html>
