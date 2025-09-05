@@ -1,48 +1,63 @@
 <?php
-// Include database connection
-include 'config.php';
+include_once 'config.php';
 
-// Initialize variables
-$success_message = '';
-$error_message = '';
+$name = $gender = $date_of_birth = $age = $civil_status = $religion = $email = $contact_no = $address = $place_of_birth = $citizenship = $photo = "";
+$success_message = "";
+$error_message = "";
 
-// Process form submission
+// Check if form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Sanitize and validate input data
-    $name = mysqli_real_escape_string($conn, trim($_POST['name']));
+    // Validate and sanitize input data
+    $name = mysqli_real_escape_string($conn, $_POST['name']);
     $gender = mysqli_real_escape_string($conn, $_POST['gender']);
     $date_of_birth = mysqli_real_escape_string($conn, $_POST['date_of_birth']);
-    $age = (int)$_POST['age'];
+    $age = mysqli_real_escape_string($conn, $_POST['age']);
     $civil_status = mysqli_real_escape_string($conn, $_POST['civil_status']);
-    $religion = mysqli_real_escape_string($conn, trim($_POST['religion']));
-    $email = mysqli_real_escape_string($conn, trim($_POST['email']));
-    $contact_no = mysqli_real_escape_string($conn, trim($_POST['contact_no']));
-    $address = mysqli_real_escape_string($conn, trim($_POST['address']));
-    $place_of_birth = mysqli_real_escape_string($conn, trim($_POST['place_of_birth']));
-    $citizenship = mysqli_real_escape_string($conn, trim($_POST['citizenship']));
-    $photo = mysqli_real_escape_string($conn, $_POST['photo']);
+    $religion = mysqli_real_escape_string($conn, $_POST['religion']);
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $contact_no = mysqli_real_escape_string($conn, $_POST['contact_no']);
+    $address = mysqli_real_escape_string($conn, $_POST['address']);
+    $place_of_birth = mysqli_real_escape_string($conn, $_POST['place_of_birth']);
+    $citizenship = mysqli_real_escape_string($conn, $_POST['citizenship']);
     
-    // Validate required fields
-    if (empty($name) || empty($gender) || empty($date_of_birth) || empty($civil_status) || 
-        empty($religion) || empty($email) || empty($contact_no) || empty($address) || 
-        empty($place_of_birth) || empty($citizenship)) {
-        $error_message = "All required fields must be filled!";
-    } else {
-
-            // Insert data into database
-            $sql = "INSERT INTO students (name, gender, date_of_birth, age, civil_status, religion, email, contact_no, address, place_of_birth, citizenship, photo) 
-                    VALUES ('$name', '$gender', '$date_of_birth', $age, '$civil_status', '$religion', '$email', '$contact_no', '$address', '$place_of_birth', '$citizenship', '$photo')";
-            
-            if (mysqli_query($conn, $sql)) {
-                $success_message = "Student added successfully!";
-                // Clear form data after successful submission
-                $_POST = array();
-            } else {
-                $error_message = "Error: " . mysqli_error($conn);
-            }
+    // Handle file upload
+    if (isset($_FILES['photo']) && $_FILES['photo']['error'] == 0) {
+        $target_dir = "uploads/";
+        if (!file_exists($target_dir)) {
+            mkdir($target_dir, 0777, true);
         }
+        
+        $file_extension = pathinfo($_FILES["photo"]["name"], PATHINFO_EXTENSION);
+        $file_name = uniqid() . '.' . $file_extension;
+        $target_file = $target_dir . $file_name;
+        
+        // Check if image file is an actual image
+        $check = getimagesize($_FILES["photo"]["tmp_name"]);
+        if ($check !== false) {
+            if (move_uploaded_file($_FILES["photo"]["tmp_name"], $target_file)) {
+                $photo = $target_file;
+            } else {
+                $error_message = "Sorry, there was an error uploading your file.";
+            }
+        } else {
+            $error_message = "File is not an image.";
+        }
+    }
     
+    // Insert data into database
+    if (empty($error_message)) {
+        $sql = "INSERT INTO students (name, gender, date_of_birth, age, civil_status, religion, email, contact_no, address, place_of_birth, citizenship, photo)
+                VALUES ('$name', '$gender', '$date_of_birth', '$age', '$civil_status', '$religion', '$email', '$contact_no', '$address', '$place_of_birth', '$citizenship', '$photo')";
+        
+        if ($conn->query($sql) === TRUE) {
+            $success_message = "New student record created successfully";
+        } else {
+            $error_message = "Error: " . $sql . "<br>" . $conn->error;
+        }
+    }
 }
+
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -349,11 +364,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <i class="fas fa-cloud-upload-alt upload-icon"></i>
                                         <img id="previewImage" src="" alt="Preview">
                                     </div>
-                                    <input type="file" class="form-control d-none" id="photoUpload" accept="image/*">
+                                    <input type="file" class="form-control d-none" id="photoUpload" name="photo" accept="image/*">
                                     <button type="button" class="btn btn-outline-primary" id="uploadTrigger">
                                         <i class="fas fa-upload me-1"></i>Upload Photo
                                     </button>
-                                    <input type="hidden" id="photo" name="photo">
                                 </div>
                             </div>
                         </div>
@@ -378,7 +392,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Calculate age based on date of birth
         document.getElementById('date_of_birth').addEventListener('change', function() {
@@ -393,112 +406,70 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
             document.getElementById('age').value = age;
         });
-        
-        // Photo upload functionality
+
+        // Photo upload preview
         document.getElementById('uploadTrigger').addEventListener('click', function() {
             document.getElementById('photoUpload').click();
         });
-        
+
         document.getElementById('photoUpload').addEventListener('change', function() {
             const file = this.files[0];
             if (file) {
                 const reader = new FileReader();
-                
                 reader.onload = function(e) {
-                    const preview = document.getElementById('previewImage');
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
+                    document.getElementById('previewImage').src = e.target.result;
+                    document.getElementById('previewImage').style.display = 'block';
                     document.querySelector('.upload-icon').style.display = 'none';
-                    document.getElementById('photo').value = e.target.result;
                 }
-                
                 reader.readAsDataURL(file);
             }
         });
-        
-        // SweetAlert confirmation before form submission
+
+        // Form submission with SweetAlert confirmation
         document.getElementById('submitBtn').addEventListener('click', function() {
-            // Validate required fields
+            // Validate form
             const form = document.getElementById('addStudentForm');
-            const requiredFields = form.querySelectorAll('[required]');
-            let isValid = true;
-            let emptyFields = [];
-            
-            requiredFields.forEach(field => {
-                if (!field.value.trim()) {
-                    isValid = false;
-                    emptyFields.push(field.previousElementSibling.textContent.replace('*', ''));
-                }
-            });
-            
-            if (!isValid) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Missing Required Fields',
-                    html: 'Please fill in the following required fields:<br><br>' + 
-                          '<ul style="text-align: left;">' + 
-                          emptyFields.map(field => '<li>' + field + '</li>').join('') + 
-                          '</ul>',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#4e73df'
-                });
+            if (!form.checkValidity()) {
+                form.reportValidity();
                 return;
             }
-            
+
             // Show confirmation dialog
             Swal.fire({
-                title: 'Confirm Student Registration',
-                text: 'Are you sure you want to add this student to the system?',
+                title: 'Are you sure?',
+                text: "Do you want to add this student to the system?",
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#4e73df',
                 cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Yes, Add Student',
-                cancelButtonText: 'Cancel'
+                confirmButtonText: 'Yes, add student!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Show loading
-                    Swal.fire({
-                        title: 'Processing...',
-                        text: 'Adding student to the system',
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        showConfirmButton: false,
-                        didOpen: () => {
-                            Swal.showLoading();
-                        }
-                    });
-                    
                     // Submit the form
                     form.submit();
                 }
             });
         });
-        
-        // Show success/error messages
+
+        // Show success/error messages with SweetAlert
         <?php if (!empty($success_message)): ?>
-        Swal.fire({
-            icon: 'success',
-            title: 'Success!',
-            text: '<?php echo $success_message; ?>',
-            confirmButtonColor: '#1cc88a',
-            timer: 3000,
-            timerProgressBar: true
-        }).then(() => {
-            // Reset form after success
-            document.getElementById('addStudentForm').reset();
-            document.getElementById('previewImage').style.display = 'none';
-            document.querySelector('.upload-icon').style.display = 'block';
-        });
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: '<?php echo $success_message; ?>',
+                confirmButtonColor: '#4e73df'
+            }).then((result) => {
+                window.location.href = 'home.php';
+            });
         <?php endif; ?>
-        
+
         <?php if (!empty($error_message)): ?>
-        Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: '<?php echo $error_message; ?>',
-            confirmButtonColor: '#e74a3b'
-        });
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: '<?php echo $error_message; ?>',
+                confirmButtonColor: '#4e73df'
+            });
         <?php endif; ?>
     </script>
 </body>
