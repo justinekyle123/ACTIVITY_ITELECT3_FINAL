@@ -104,15 +104,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             font-family: 'Poppins', sans-serif;
             color: #2e3a59;
         }
-        
-        .school-header {
-            background: linear-gradient(120deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 20px 0;
-            border-radius: 0 0 20px 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
+        .card{
+            margin-top:7%;
         }
+         .navbar {
+            background: linear-gradient(90deg, var(--primary) 0%, #2a3e9d 100%);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100vw;
+            top:0;
+            z-index: 999;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        
         
         .school-logo {
             display: flex;
@@ -316,18 +323,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </style>
 </head>
 <body>
-    <!-- School Header -->
-    <header class="school-header">
+     <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
         <div class="container">
-            <div class="school-logo">
-                <i class="fas fa-graduation-cap logo-icon"></i>
-                <div>
-                    <h1 class="school-name">Prestige Academy</h1>
-                    <p class="school-tagline">Excellence in Education Since 1995</p>
-                </div>
+            <a class="navbar-brand" href="home.php">
+                <i class="fas fa-graduation-cap me-2"></i>Student Management System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="home.php"><i class="fas fa-home me-1"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="add_student.php"><i class="fas fa-user-plus me-1"></i> Add Student</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php"><i  class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                    </li>
+                </ul>
             </div>
         </div>
-    </header>
+    </nav>
 
     <div class="container mb-5">
         <div class="card edit-card">
@@ -434,9 +453,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
 
-    <footer class="footer text-center">
+     <footer class="footer text-center">
         <div class="container">
-            <p class="mb-0">© 2023 Prestige Academy Student Management System. All rights reserved.</p>
+            <p class="mb-0">© 2025 South East Asian Institute of Technology.</p>
             <p class="mb-0">Designed for excellence in education</p>
         </div>
     </footer>
