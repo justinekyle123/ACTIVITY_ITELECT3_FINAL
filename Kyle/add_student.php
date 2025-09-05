@@ -94,6 +94,10 @@ $conn->close();
             width: 100vw;
             top:0;
         }
+         .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
         
         .form-container {
             max-width: 1000px;

@@ -203,7 +203,7 @@
         }
         ?>
 
-        <h1 class="page-title">Student Dashboard</h1>
+        <h1 class="page-title" style="margin-top:7%;">Student Dashboard</h1>
 
         <!-- Dashboard Cards -->
         <div class="row mb-4">
