@@ -54,20 +54,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($conn->query($update)) {
         echo "<script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Updated!',
-                text: 'Student record has been updated.',
-                confirmButtonColor: '#4e73df'
-            }).then(() => { window.location='view_student.php?id=$id'; });
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Updated!',
+                    text: 'Student record has been updated.',
+                    confirmButtonColor: '#4e73df'
+                }).then(() => { window.location='view_student.php?id=$id'; });
+            });
         </script>";
     } else {
         echo "<script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Error!',
-                text: 'Something went wrong while updating.',
-                confirmButtonColor: '#e74a3b'
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Something went wrong while updating.',
+                    confirmButtonColor: '#e74a3b'
+                });
             });
         </script>";
     }
@@ -292,6 +296,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             margin-left: 4px;
         }
         
+        .age-display {
+            background-color: var(--light);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-top: 8px;
+            display: inline-block;
+        }
+        
         @media (max-width: 768px) {
             .profile-pic-container {
                 display: flex;
@@ -355,17 +369,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             
                             <div class="mb-3">
                                 <label class="form-label field-required"><i class="fas fa-birthday-cake input-icon"></i> Date of Birth</label>
-                                <input type="date" name="Date_of_birth" value="<?= $student['Date_of_birth'] ?>" class="form-control" required>
+                                <input type="date" name="Date_of_birth" id="Date_of_birth" value="<?= $student['Date_of_birth'] ?>" class="form-control" required>
+                                <div class="age-display mt-2">Age: <span id="ageDisplay"><?= $student['Age'] ?></span> years</div>
+                                <input type="hidden" name="Age" id="Age" value="<?= $student['Age'] ?>">
                             </div>
                             
                             <div class="mb-3">
                                 <label class="form-label"><i class="fas fa-map-marker-alt input-icon"></i> Place of Birth</label>
                                 <input type="text" name="Place_of_Birth" value="<?= $student['Place_of_Birth'] ?>" class="form-control">
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label field-required"><i class="fas fa-calendar-alt input-icon"></i> Age</label>
-                                <input type="number" name="Age" value="<?= $student['Age'] ?>" class="form-control" required min="5" max="30">
                             </div>
                             
                             <div class="mb-3">
@@ -444,6 +455,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         });
         
+        // Calculate age based on date of birth
+        function calculateAge(dob) {
+            const birthDate = new Date(dob);
+            const today = new Date();
+            
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            
+            return age;
+        }
+        
+        // Update age when date of birth changes
+        document.getElementById('Date_of_birth').addEventListener('change', function() {
+            const dob = this.value;
+            if (dob) {
+                const age = calculateAge(dob);
+                document.getElementById('ageDisplay').textContent = age;
+                document.getElementById('Age').value = age;
+            }
+        });
+        
         // Form validation
         document.getElementById('editStudentForm').addEventListener('submit', function(e) {
             let valid = true;
@@ -466,6 +502,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     text: 'Please fill in all required fields.',
                     confirmButtonColor: '#e74a3b'
                 });
+            }
+        });
+        
+        // Initialize age on page load if date of birth exists
+        document.addEventListener('DOMContentLoaded', function() {
+            const dob = document.getElementById('Date_of_birth').value;
+            if (dob) {
+                const age = calculateAge(dob);
+                document.getElementById('ageDisplay').textContent = age;
+                document.getElementById('Age').value = age;
             }
         });
     </script>
