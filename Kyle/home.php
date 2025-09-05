@@ -130,7 +130,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="index.php"><i class="fas fa-home me-1"></i> Home</a>
+                        <a class="nav-link active" href="home.php"><i class="fas fa-home me-1"></i> Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="add_student.php"><i class="fas fa-user-plus me-1"></i> Add Student</a>
