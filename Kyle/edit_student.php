@@ -78,50 +78,396 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Student</title>
+    <title>Edit Student | <?= $student['Name'] ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #f8f9fc; }
-        .card { border-radius: 15px; }
-        .card-header {
-            background: linear-gradient(90deg, #36b9cc, #1c7cd6);
-            color: white;
-            border-radius: 15px 15px 0 0;
+        :root {
+            --primary: #4e73df;
+            --secondary: #2a3e9d;
+            --accent: #ff6b6b;
+            --light: #f8f9fc;
+            --dark: #2e3a59;
+            --success: #1cc88a;
+            --warning: #f6c23e;
+            --danger: #e74a3b;
         }
-        label { font-weight: 600; }
+        
+        body {
+            background-color: #f0f4f9;
+            font-family: 'Poppins', sans-serif;
+            color: #2e3a59;
+        }
+        
+        .school-header {
+            background: linear-gradient(120deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px 0;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .school-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            font-size: 2.2rem;
+            color: white;
+        }
+        
+        .school-name {
+            font-weight: 700;
+            font-size: 1.8rem;
+            margin: 0;
+        }
+        
+        .school-tagline {
+            font-weight: 300;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .edit-card {
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: none;
+            margin-bottom: 30px;
+        }
+        
+        .card-header {
+            background: linear-gradient(120deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px 25px;
+            position: relative;
+        }
+        
+        .card-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent), #ff9e9e);
+        }
+        
+        .profile-pic-container {
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border: 5px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .photo-upload {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .form-section {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(78, 115, 223, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 8px;
+            padding: 10px 15px;
+            border: 2px solid #e0e6ef;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
+        }
+        
+        .input-icon {
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+        
+        .btn-school-primary {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-school-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(78, 115, 223, 0.4);
+            color: white;
+        }
+        
+        .btn-school-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            padding: 8px 18px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-school-secondary:hover {
+            background: var(--light);
+            transform: translateY(-2px);
+            color: var(--primary);
+        }
+        
+        .btn-school-success {
+            background: linear-gradient(to right, var(--success), #0f9d7a);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-school-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(28, 200, 138, 0.4);
+            color: white;
+        }
+        
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 20px 0;
+            margin-top: 40px;
+            border-radius: 20px 20px 0 0;
+        }
+        
+        .field-required::after {
+            content: '*';
+            color: var(--danger);
+            margin-left: 4px;
+        }
+        
+        @media (max-width: 768px) {
+            .profile-pic-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+        }
     </style>
 </head>
 <body>
-<div class="container mt-5">
-    <div class="card shadow-lg">
-        <div class="card-header">
-            <h4><i class="fas fa-edit"></i> Edit Student</h4>
+    <!-- School Header -->
+    <header class="school-header">
+        <div class="container">
+            <div class="school-logo">
+                <i class="fas fa-graduation-cap logo-icon"></i>
+                <div>
+                    <h1 class="school-name">Prestige Academy</h1>
+                    <p class="school-tagline">Excellence in Education Since 1995</p>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <form method="POST" enctype="multipart/form-data">
-                <div class="text-center mb-3">
-                    <img src="<?= $student['Photo'] ?>" width="120" height="120" class="rounded-circle border mb-2">
-                    <input type="file" name="Photo" class="form-control w-50 mx-auto">
-                </div>
-                <div class="row">
-                    <?php foreach ($student as $key => $value): ?>
-                        <?php if ($key != 'student_id' && $key != 'Photo' && $key != 'Date'): ?>
-                            <div class="col-md-6 mb-3">
-                                <label><?= ucwords(str_replace("_", " ", $key)) ?></label>
-                                <input type="text" name="<?= $key ?>" value="<?= $value ?>" class="form-control">
+    </header>
+
+    <div class="container mb-5">
+        <div class="card edit-card">
+            <div class="card-header">
+                <h4 class="m-0"><i class="fas fa-user-edit me-2"></i> Edit Student Profile</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" enctype="multipart/form-data" id="editStudentForm">
+                    <div class="text-center mb-4">
+                        <div class="profile-pic-container">
+                            <img src="<?= $student['Photo'] ?>" id="profilePreview" class="rounded-circle profile-pic shadow">
+                            <label for="Photo" class="photo-upload">
+                                <i class="fas fa-camera"></i>
+                            </label>
+                            <input type="file" name="Photo" id="Photo" class="d-none" accept="image/*">
+                        </div>
+                        <h5 class="mt-2"><?= $student['Name'] ?></h5>
+                        <p class="text-muted">ID: <?= $student['student_id'] ?></p>
+                    </div>
+                    
+                    <div class="row">
+                        <!-- Personal Information -->
+                        <div class="col-lg-6 mb-4">
+                            <h5 class="section-title"><i class="fas fa-user"></i> Personal Information</h5>
+                            
+                            <div class="mb-3">
+                                <label class="form-label field-required"><i class="fas fa-signature input-icon"></i> Full Name</label>
+                                <input type="text" name="Name" value="<?= $student['Name'] ?>" class="form-control" required>
                             </div>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                </div>
-                <div class="text-end">
-                    <a href="view_student.php?id=<?= $student['student_id'] ?>" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Cancel</a>
-                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Update</button>
-                </div>
-            </form>
+                            
+                            <div class="mb-3">
+                                <label class="form-label field-required"><i class="fas fa-venus-mars input-icon"></i> Gender</label>
+                                <select name="Gender" class="form-select" required>
+                                    <option value="Male" <?= $student['Gender'] == 'Male' ? 'selected' : '' ?>>Male</option>
+                                    <option value="Female" <?= $student['Gender'] == 'Female' ? 'selected' : '' ?>>Female</option>
+                                    <option value="Other" <?= $student['Gender'] == 'Other' ? 'selected' : '' ?>>Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label field-required"><i class="fas fa-birthday-cake input-icon"></i> Date of Birth</label>
+                                <input type="date" name="Date_of_birth" value="<?= $student['Date_of_birth'] ?>" class="form-control" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label"><i class="fas fa-map-marker-alt input-icon"></i> Place of Birth</label>
+                                <input type="text" name="Place_of_Birth" value="<?= $student['Place_of_Birth'] ?>" class="form-control">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label field-required"><i class="fas fa-calendar-alt input-icon"></i> Age</label>
+                                <input type="number" name="Age" value="<?= $student['Age'] ?>" class="form-control" required min="5" max="30">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label"><i class="fas fa-heart input-icon"></i> Civil Status</label>
+                                <select name="Civil_status" class="form-select">
+                                    <option value="Single" <?= $student['Civil_status'] == 'Single' ? 'selected' : '' ?>>Single</option>
+                                    <option value="Married" <?= $student['Civil_status'] == 'Married' ? 'selected' : '' ?>>Married</option>
+                                    <option value="Divorced" <?= $student['Civil_status'] == 'Divorced' ? 'selected' : '' ?>>Divorced</option>
+                                    <option value="Widowed" <?= $student['Civil_status'] == 'Widowed' ? 'selected' : '' ?>>Widowed</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Contact Information -->
+                        <div class="col-lg-6 mb-4">
+                            <h5 class="section-title"><i class="fas fa-address-card"></i> Contact Information</h5>
+                            
+                            <div class="mb-3">
+                                <label class="form-label field-required"><i class="fas fa-envelope input-icon"></i> Email</label>
+                                <input type="email" name="Email" value="<?= $student['Email'] ?>" class="form-control" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label field-required"><i class="fas fa-phone input-icon"></i> Contact Number</label>
+                                <input type="tel" name="Contact_no" value="<?= $student['Contact_no'] ?>" class="form-control" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label field-required"><i class="fas fa-home input-icon"></i> Address</label>
+                                <textarea name="Address" class="form-control" rows="3" required><?= $student['Address'] ?></textarea>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label"><i class="fas fa-church input-icon"></i> Religion</label>
+                                <input type="text" name="Religion" value="<?= $student['Religion'] ?>" class="form-control">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label"><i class="fas fa-globe input-icon"></i> Citizenship</label>
+                                <input type="text" name="Citizenship" value="<?= $student['Citizenship'] ?>" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="view_student.php?id=<?= $student['student_id'] ?>" class="btn btn-school-secondary">
+                            <i class="fas fa-arrow-left me-2"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-school-success">
+                            <i class="fas fa-save me-2"></i> Update Student
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+
+    <footer class="footer text-center">
+        <div class="container">
+            <p class="mb-0">© 2023 Prestige Academy Student Management System. All rights reserved.</p>
+            <p class="mb-0">Designed for excellence in education</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Profile photo preview
+        document.getElementById('Photo').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profilePreview').src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Form validation
+        document.getElementById('editStudentForm').addEventListener('submit', function(e) {
+            let valid = true;
+            const requiredFields = this.querySelectorAll('[required]');
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    valid = false;
+                    field.classList.add('is-invalid');
+                } else {
+                    field.classList.remove('is-invalid');
+                }
+            });
+            
+            if (!valid) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Missing Information',
+                    text: 'Please fill in all required fields.',
+                    confirmButtonColor: '#e74a3b'
+                });
+            }
+        });
+    </script>
 </body>
 </html>
